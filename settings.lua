@@ -7,6 +7,21 @@ data:extend{
   },
 
   {
+		type = "string-setting",
+		name = "beltlayer-blueprint",
+		setting_type = "runtime-per-user",
+		default_value = "alt-not-pressed",
+		allowed_values = {"alt-pressed", "alt-not-pressed"}
+  },
+  {
+		type = "string-setting",
+		name = "beltlayer-deconstruct",
+		setting_type = "runtime-per-user",
+		default_value = "alt-not-pressed",
+		allowed_values = {"alt-pressed", "alt-not-pressed"}
+  },
+
+  {
     type = "int-setting",
     name = "beltlayer-buffer-stacks",
     setting_type = "startup",

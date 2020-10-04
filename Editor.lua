@@ -418,8 +418,17 @@ local function on_player_deconstructed_area(self, player, area, tool)
   end
 end
 
+local function checkIfNeedToDeconstruct(event)
+  local player = game.players[event.player_index]
+  if settings.get_player_settings(player)["beltlayer-deconstruct"].value == "alt-not-pressed" then
+      return event.alt
+  else
+    return not event.alt
+  end
+end
+
 function Editor:on_player_deconstructed_area(event)
-  if event.alt then return end
+  if checkIfNeedToDeconstruct(event) then return end
   local player = game.players[event.player_index]
   on_player_deconstructed_area(self, player, event.area, player.cursor_stack)
 end
@@ -470,13 +479,22 @@ function Editor:on_pre_ghost_deconstructed(event)
   super.on_pre_ghost_deconstructed(self, event)
 end
 
+local function checkIfNeedToBlueprint(event)
+  local player = game.players[event.player_index]
+  if settings.get_player_settings(player)["beltlayer-blueprint"].value == "alt-not-pressed" then
+      return event.alt
+  else
+    return not event.alt
+  end
+end
+
 function Editor:on_player_setup_blueprint(event)
   local player = game.players[event.player_index]
   local area = event.area
 
   if connector_in_area(player.surface, area) then
-    super.capture_underground_entities_in_blueprint(self, event)
-    if event.item == "cut-paste-tool" and event.alt then
+    super.capture_underground_entities_in_blueprint(self, event, not checkIfNeedToBlueprint(event))
+    if event.item == "cut-paste-tool" and checkIfNeedToDeconstruct(event) then
       local player = game.players[event.player_index]
       on_player_deconstructed_area(self, player, area, nil)
     end
